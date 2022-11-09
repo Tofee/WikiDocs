@@ -50,7 +50,7 @@
    // check for selected index
    if($index_fe->url==substr($DOC->ID,0,strlen($index_fe->url))){
     // get secondary level index
-    $sub_index_array=wdf_document_index($index_fe->url);
+    $sub_index_array=wdf_document_index($index_fe->id);
     // third level default style
     $thirdLevelStyle='display:none';
     // cycle all documents
@@ -59,7 +59,7 @@
      if($sub_index_fe->url==substr($DOC->ID,0,strlen($sub_index_fe->url))){echo " active";$thirdLevelStyle="display:block";}else{$thirdLevelStyle="display:none";}
      echo "\"><a class=\"waves-effect waves-light\" href=\"".$APP->PATH.$sub_index_fe->url."\">&nbsp;&nbsp;&nbsp;".$sub_index_fe->label."</a>\n";
 	    // get third level index and build sub-menus
-	    $subsub_index_array=wdf_document_index($sub_index_fe->url);
+	    $subsub_index_array=wdf_document_index($sub_index_fe->id);
      if(!empty($subsub_index_array)){
       echo "<ul style=".$thirdLevelStyle.">";
 	     foreach($subsub_index_array as $third_index_fe){
@@ -101,7 +101,7 @@
    if($DOC->ID==$element->path){
     echo "<span class=\"nowrap\">".$element->label."</span>";
    }else{
-    echo "<a href=\"".$APP->PATH.$element->path."\" class=\"main-color-text nowrap\">".$element->label."</a> / ";
+    echo "<a href=\"".$APP->PATH.urlencode($element->path)."\" class=\"main-color-text nowrap\">".$element->label."</a> / ";
    }
   }
  }

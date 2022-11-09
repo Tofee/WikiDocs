@@ -101,7 +101,7 @@ class Document{
 			 // add element list
 			 $source.="- [".$sub_element_fe->label."](".PATH.$sub_element_fe->url.")\n";
 			 // search for sub-sub-documents
-			 $sub_sub_documents=wdf_document_index($sub_element_fe->url);
+			 $sub_sub_documents=wdf_document_index($sub_element_fe->id);
 			 // cycle all sub-sub-documents
 			 foreach($sub_sub_documents as $sub_sub_element_fe){
 				 // add element list

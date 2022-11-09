@@ -28,7 +28,7 @@ if(isset($_GET['debug'])){
 // errors display for debug
 ini_set("display_errors",$debug);
 // get document id from rewrited url
-$g_doc=strtolower(str_replace(array(" "),"-",$_GET['doc']));
+$g_doc=urldecode(str_replace(array(" "),"-",$_GET['doc']));
 // remove trailing slashes
 if(substr($g_doc,-1)=="/"){$g_doc=substr($g_doc,0,-1);}
 // set homepage as default if no request
@@ -207,22 +207,24 @@ function wdf_document_index($parent=""){
   // cycle all documents
   foreach($directories_array as $document_fe){
    // definitions
-   $document_url=$parent."/".$document_fe->id;
-   $document_label=wdf_document_title($document_url);
+   $document_id=$parent."/".$document_fe->id;
+   $document_label=wdf_document_title($document_id);
    // check document url
-   if(substr($document_url,0,1)=="/"){$document_url=substr($document_url,1);}
+   if(substr($document_id,0,1)=="/"){$document_id=substr($document_id,1);}
    // add document to documents array
-   $documents_array[$document_url]=$document_label;
+   $documents_array[$document_id]=$document_label;
   }
  }
  // sort document array by title
  asort($documents_array);
  // cycle all documents and build index array
- foreach($documents_array as $url_fe=>$label_fe){
+ foreach($documents_array as $id_fe=>$label_fe){
   // build index element
   $element=new stdClass();
   $element->label=$label_fe;
-  $element->url=$url_fe;
+  $element->id=$id_fe;
+  $element->url=urlencode($id_fe);
+//  $element->url=str_replace(" ", "%20", $id_fe);
   // add element to index array
   $index_array[]=$element;
  }

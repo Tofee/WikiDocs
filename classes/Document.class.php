@@ -31,9 +31,9 @@ class Document{
   $this->ID=$id;
   $this->PATH=PATH."documents/".$this->ID;
   $this->URL=URL.$this->ID;
-  $this->DIR=ROOT.$this->PATH."/";
   $this->TITLE=wdf_document_title($this->ID);
-  $this->FILE=$this->DIR."content.md";
+  $this->FILE=ROOT.$this->PATH;
+  $this->DIR=dirname($this->FILE);
   $this->TIMESTAMP=null;
   // check if file exist
   if(!file_exists($this->FILE)){$this->FILE="";}
@@ -72,8 +72,8 @@ class Document{
   $content=file_get_contents($this->FILE);
   // replace path placeholders
   switch(strtoupper(trim($paths))){
-   case "WEB":$source=str_replace(array("{{APP_PATH}}","{{DOC_PATH}}"),array(PATH,$this->PATH."/"),$content);break;
-   case "FS":$source=str_replace(array("{{APP_PATH}}","{{DOC_PATH}}"),array(URL,$this->DIR."/"),$content);break;
+   case "WEB":$source=str_replace(array("{{APP_PATH}}","{{DOC_PATH}}"),array(PATH,$this->PATH),$content);break;
+   case "FS":$source=str_replace(array("{{APP_PATH}}","{{DOC_PATH}}"),array(URL,$this->FILE),$content);break;
    default:$source=str_replace(array("{{APP_PATH}}","{{DOC_PATH}}"),"",$content);
   }
   // return

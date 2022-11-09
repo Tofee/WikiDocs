@@ -171,15 +171,17 @@ function wdf_document_list($parent=""){
   $elements=scandir($directory_path);
   // cycle all elements
   foreach($elements as $element_fe){
-   // skip versioning and files
-   if(in_array($element_fe,array(".","..","versions","homepage"))){continue;}
-   if(!is_dir($directory_path.$element_fe)){continue;}
-   // build directory
+   // skip versioning and non-markdown files
+   $element_id=$element_fe;
+   if(in_array($element_fe,array(".","..","homepage"))){continue;}
+   if(substr($element_fe,-3)!=".md" && !is_dir($directory_path.$element_fe)) {continue;}
+   
+   // build element (can be a directory or a markdown document)
    $document=new stdClass();
    $document->id=$element_fe;
    $document->path=$parent.$element_fe;
-   $document->url=URL.$document->path;
-   $document->dir=$directory_path.$element_fe;
+   $document->url=URL.$parent.$element_fe;
+   $document->dir=dirname($directory_path.$element_fe); // not sure about this
    // add element to documents array
    $documents_array[]=$document;
   }
@@ -290,10 +292,10 @@ function wdf_document_search($query,$parent=null){
  */
 function wdf_document_title($document){
  // make path
- $content_path=DIR."documents/".$document."/content.md";
+ $content_path=DIR."documents/".$document;
  $title="";
  // load content line by line to find document title if exist
- if(file_exists($content_path)){
+ if(!is_dir($content_path) && file_exists($content_path)){
   $handle=fopen($content_path,"r");
   while(!feof($handle)){
    $line=fgets($handle);
@@ -306,8 +308,9 @@ function wdf_document_title($document){
  }
  if(!strlen($title)){
   // make title by path
-  $hierarchy=explode("/",$document);
-  $title=ucwords(str_replace("-"," ",end($hierarchy)));
+  $title=ucwords(str_replace("-"," ",basename($document)));
+  if(substr($title,-3)==".md"){$title=substr($title,0,-3);}
+  else $title.="/";
  }
  // return
  return $title;

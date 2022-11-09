@@ -101,15 +101,6 @@
   wdf_dump($DOC,"DOCUMENT");
   // check for directory or make it
   if(!is_dir($DOC->DIR)){mkdir($DOC->DIR,0755,true);}
-  // check revision
-  if($p_revision){
-   // check for content file
-   if(file_exists($DOC->DIR."content.md")){
-    // check for revisions directory
-    if(!is_dir($DOC->DIR."versions")){mkdir($DOC->DIR."versions",0755,true);}
-    rename($DOC->DIR."content.md",$DOC->DIR."versions/".date("Ymd_His").".md");
-   }
-  }
   // document path definition
   define("DOC_PATH",$DOC->PATH."/");
   // replace url in images

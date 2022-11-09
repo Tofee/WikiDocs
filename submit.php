@@ -41,7 +41,7 @@
   // reset authentication
   $_SESSION['wikidocs']['authenticated']=0;
   // acquire variables
-  $p_document=strtolower($_POST['document']);
+  $p_document=$_POST['document'];
   $p_password=$_POST['password'];
   // check edit code
   if(md5($p_password)===EDITCODE){
@@ -63,7 +63,7 @@
   if($_SESSION['wikidocs']['authenticated']==0){
    // alert and redirect
    wdf_alert("Invalid authentication code!","danger");
-   wdf_redirect(PATH.$p_document);
+   wdf_redirect(PATH.urlencode($p_document));
   }
  }
 
@@ -75,7 +75,7 @@
   wdf_dump($_REQUEST,"_REQUEST");
   // acquire variables
   $p_revision=boolval($_POST['revision']);
-  $p_document=strtolower($_POST['document']);
+  $p_document=$_POST['document'];
   $p_content=$_POST['content'];
   // check authentication
   if(wdf_authenticated()!=2){
@@ -95,6 +95,8 @@
    wdf_alert("Document content cannot be empty!","danger");
    wdf_redirect(PATH.$p_document."?edit");
   }
+  // add file extension if needed
+  if(substr($p_document,-3)!=".md") $p_document.=".md";
   // initialize document
   $DOC=new Document($p_document);
   // debug
@@ -102,7 +104,7 @@
   // check for directory or make it
   if(!is_dir($DOC->DIR)){mkdir($DOC->DIR,0755,true);}
   // document path definition
-  define("DOC_PATH",$DOC->PATH."/");
+  define("DOC_PATH",$DOC->PATH);
   // replace url in images
   $p_content=preg_replace_callback('/!\[(.*)\]\s?\((.*)(.png|.gif|.jpg|.jpeg|.svg)(.*)\)/',function($match){return str_replace(DOC_PATH,"{{DOC_PATH}}",$match[0]);},$p_content);
   // replace url in images
@@ -112,11 +114,11 @@
   // debug
   wdf_dump($p_content,"content");
   // save content file
-  $bytes=file_put_contents($DOC->DIR."content.md",$p_content);
+  $bytes=file_put_contents($DOC->FILE,$p_content);
   // alerts
   if($bytes>0){
    // delete draft if exist
-   if(file_exists($DOC->DIR."draft.md")){unlink($DOC->DIR."draft.md");}
+   if(file_exists($DOC->DIR."/draft.md")){unlink($DOC->DIR."/draft.md");}
    // sum size of all images
    foreach($DOC->images() as $image_fe){$bytes+=filesize($DOC->DIR.$image_fe);}
    if($bytes<1000000){$size=number_format($bytes/1000,2,",",".")." KB";}else{$size=number_format($bytes/1000000,2,",",".")." MB";}
@@ -125,7 +127,7 @@
    wdf_alert("An error occurred while saving the document!","danger");
   }
   // redirect
-  wdf_redirect(PATH.$p_document);
+  wdf_redirect(PATH.urlencode($p_document));
  }
 
  /**
@@ -135,7 +137,7 @@
   // debug
   wdf_dump($_REQUEST,"_REQUEST");
   // acquire variables
-  $p_document=strtolower($_GET['document']);
+  $p_document=$_GET['document'];
   // check authentication
   if(wdf_authenticated()!=2){
    // alert and redirect
@@ -151,19 +153,8 @@
   // initialize document
   $DOC=new Document($p_document);
   wdf_dump($DOC,'DOC');
-  // check for trash directory or make it
-  if(!is_dir(DIR."trash")){mkdir(DIR."trash",0755,true);}
-  // check for recursive path
-  /*if(strrpos($DOC->ID,'/')){
-   wdf_dump(strrpos($DOC->ID,'/'));
-   $recursive_path=(substr($DOC->ID,0,strrpos($DOC->ID,'/')));
-   // check for recursive directory or make it
-   if(!is_dir(DIR."trash/".$recursive_path)){mkdir(DIR."trash/".$recursive_path,0755,true);}
-  }*/
-  $trash_id=str_replace('/','___',$DOC->ID)."_".date("Ymd_His");
-  wdf_dump($trash_id);
   // move document to trash
-  if(is_dir($DOC->DIR)){rename($DOC->DIR,DIR."trash/".$trash_id);}
+  if(file_exists($DOC->FILE)) {unlink($DOC->FILE);}
   // alert and redirect
   wdf_alert("Document deleted","warning");
   wdf_redirect(PATH);
@@ -174,7 +165,7 @@
   */
  function image_upload_ajax(){
   // acquire variables
-  $p_document=strtolower($_POST['document']);
+  $p_document=$_POST['document'];
   // check authentication
   if(wdf_authenticated()!=2){
    // error
@@ -244,7 +235,7 @@
   // check for uploaded
   if($uploaded){
    // success
-   echo json_encode(array("error"=>null,"code"=>"image_uploaded","name"=>$file_name,"path"=>$DOC->PATH."/".$file_name,"size"=>$image['size']));
+   echo json_encode(array("error"=>null,"code"=>"image_uploaded","name"=>$file_name,"path"=>$DOC->DIR."/".$file_name,"size"=>$image['size']));
    // return
    return true;
   }else{
@@ -260,7 +251,7 @@
   */
  function draft_save_ajax(){
   // acquire variables
-  $p_document=strtolower($_POST['document']);
+  $p_document=$_POST['document'];
   $p_content=$_POST['content'];
   // check authentication
   if(wdf_authenticated()!=2){
@@ -281,7 +272,7 @@
   // check for directory or make it
   if(!is_dir($DOC->DIR)){mkdir($DOC->DIR,0755,true);}
   // save draft content file
-  $bytes=file_put_contents($DOC->DIR."draft.md",$p_content);
+  $bytes=file_put_contents($DOC->DIR."/draft.md",$p_content);
   // check for saved
   if($bytes>0){
    // success

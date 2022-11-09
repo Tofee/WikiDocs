@@ -111,20 +111,20 @@
      <div class="col s2 m2 l2">
 <?php if(MODE=="view"){ ?>
       <span class="right nowrap">
-       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light main-color" href="<?php echo $DOC->URL."?print"; ?>" target="_blank" data-position="bottom" data-tooltip="Print this document"><i class="material-icons">print</i></a>
+       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light main-color" href="<?php echo urlencode(str_replace(URL, "", $DOC->URL))."?print"; ?>" target="_blank" data-position="bottom" data-tooltip="Print this document"><i class="material-icons">print</i></a>
 <?php if(wdf_authenticated()==2){ ?>
        <a class="btn btn-floating btn-small tooltipped waves-effect waves-light main-color" href="#" data-position="bottom" data-tooltip="Add new document" onClick="javascript:new_document();"><i class="material-icons">add_circle</i></a>
-       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light main-color" href="<?php echo $DOC->URL."?edit"; ?>" data-position="bottom" data-tooltip="Edit this document"><i class="material-icons">border_color</i></a>
+       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light main-color" href="<?php echo urlencode(str_replace(URL, "", $DOC->URL))."?edit"; ?>" data-position="bottom" data-tooltip="Edit this document"><i class="material-icons">border_color</i></a>
 <?php }else{ ?>
-       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light main-color" href="<?php echo $DOC->URL."?auth"; ?>" data-position="bottom" data-tooltip="Sign in to edit or<br>add new documents"><i class="material-icons">lock_open</i></a>
+       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light main-color" href="<?php echo urlencode(str_replace(URL, "", $DOC->URL))."?auth"; ?>" data-position="bottom" data-tooltip="Sign in to edit or<br>add new documents"><i class="material-icons">lock_open</i></a>
 <?php } ?>
        </span>
 <?php } ?>
 <?php if(MODE=="edit"){ ?>
       <span class="right nowrap">
-       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light grey" href="<?php echo $DOC->URL; ?>" data-position="bottom" data-tooltip="Cancel editing"><i class="material-icons">cancel</i></a>
+       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light grey" href="<?php echo urlencode(str_replace(URL, "", $DOC->URL)); ?>" data-position="bottom" data-tooltip="Cancel editing"><i class="material-icons">cancel</i></a>
        <a class="btn btn-floating btn-small tooltipped waves-effect waves-light blue modal-trigger" href="#modal_uploader" data-position="bottom" data-tooltip="Images"><i class="material-icons">image</i></a>
-       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light red" href="<?php echo $APP->PATH; ?>submit.php?act=content_delete&document=<?php echo $DOC->ID; ?>" data-position="bottom" data-tooltip="Delete this content" onClick="return(confirm('Do you really want to delete this content?'))"><i class="material-icons">delete</i></a>
+       <a class="btn btn-floating btn-small tooltipped waves-effect waves-light red" href="<?php $APP->PATH; ?>submit.php?act=content_delete&document=<?php echo urlencode($DOC->ID); ?>" data-position="bottom" data-tooltip="Delete this content" onClick="return(confirm('Do you really want to delete this content?'))"><i class="material-icons">delete</i></a>
        <button id="editor-revision" class="btn btn-floating btn-small tooltipped waves-effect waves-light orange" data-position="bottom" data-tooltip="Backup current version"><i id="editor-revision-checkbox" class="material-icons">check_box</i></button>
        <button id="editor-save" class="btn btn-floating btn-small tooltipped waves-effect waves-light green" data-position="bottom" data-tooltip="Save"><i class="material-icons">save</i></button>
       </span>
@@ -159,7 +159,7 @@
         <input type="hidden" name="revision" value="1">
         <input type="hidden" name="document" value="<?php echo $DOC->ID; ?>">
 <?php
- if($_GET['draft'] && file_exists($DOC->DIR."draft.md")){$source=file_get_contents($DOC->DIR."draft.md");}
+ if($_GET['draft'] && file_exists($DOC->DIR."draft.md")){$source=file_get_contents($DOC->DIR."/draft.md");}
  if(!strlen($source)){$source=$DOC->loadContent();}
 ?>
         <textarea id="simplemde" name="content"><?php echo (strlen($source)?$source:"# ".$DOC->TITLE); ?></textarea>

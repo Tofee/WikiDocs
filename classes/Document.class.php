@@ -36,7 +36,7 @@ class Document{
   $this->FILE=$this->DIR."content.md";
   $this->TIMESTAMP=null;
   // check if file exist
-  if(!file_exists($this->FILE)){$this->FILE=null;}
+  if(!file_exists($this->FILE)){$this->FILE="";}
   if(file_exists($this->FILE)){$this->TIMESTAMP=filemtime($this->FILE);}
  }
 

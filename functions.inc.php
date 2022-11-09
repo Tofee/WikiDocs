@@ -158,7 +158,7 @@ function wdf_timestamp_format($timestamp,$format="Y-m-d H:i:s"){
  * @param string $parent Parent Document ID
  * @return array
  */
-function wdf_document_list($parent=null){
+function wdf_document_list($parent=""){
  $documents_array=array();
  // check parameters
  if(substr($parent,-1)!="/"){$parent.="/";}
@@ -194,7 +194,7 @@ function wdf_document_list($parent=null){
  * @param type $parent Parent document ID
  * @return index array
  */
-function wdf_document_index($parent=null){
+function wdf_document_index($parent=""){
  // definitions
  $index_array=array();
  $documents_array=array();
@@ -291,6 +291,7 @@ function wdf_document_search($query,$parent=null){
 function wdf_document_title($document){
  // make path
  $content_path=DIR."documents/".$document."/content.md";
+ $title="";
  // load content line by line to find document title if exist
  if(file_exists($content_path)){
   $handle=fopen($content_path,"r");

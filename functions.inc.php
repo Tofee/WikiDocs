@@ -72,6 +72,7 @@ function wdf_session_start(){
  * @return integer 0 none, 1 view, 2 edit
  */
 function wdf_authenticated(){
+ if(!isset($_SESSION['wikidocs']['authenticated'])) return 0;
  return intval($_SESSION['wikidocs']['authenticated']);
 }
 

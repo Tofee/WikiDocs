@@ -10,16 +10,6 @@
 <!DOCTYPE html>
 <html>
  <head>
-<?php if(strlen(GTAG)){ ?>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo GTAG; ?>"></script>
-  <script>
-   window.dataLayer=window.dataLayer || [];
-   function gtag(){dataLayer.push(arguments);}
-   gtag('js',new Date());
-   gtag('config','<?php echo GTAG; ?>');
-  </script>
-<?php } ?>
   <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" media="screen,projection"/>
   <link type="text/css" rel="stylesheet" href="<?php echo $APP->PATH; ?>helpers/materialize-1.0.0/css/materialize.min.css" media="screen,projection"/>
   <link type="text/css" rel="stylesheet" href="<?php echo $APP->PATH; ?>helpers/easymde-2.16.1/css/easymde<?php /*echo ($APP->DARK?"-dark":"");*/ ?>.min.css" media="screen,projection"/>
